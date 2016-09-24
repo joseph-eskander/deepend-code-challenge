@@ -1,0 +1,48 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Search";
+}
+
+<h2>Search</h2>
+@using (Html.BeginForm("index", "Search", FormMethod.Post))
+{
+    <div class="row">
+        <div class="col-md-8">
+            <input type="text" class="form-control" style="max-width: 100%" placeholder="Name..." />
+        </div>
+        <div class="col-md-4">
+            <input type="submit" class="btn btn-default" style="width: 100%; max-width: 100%" value="Search" />
+        </div>
+        <div class="col-md-8">
+            <label>Gender: </label>
+            <input type="checkbox" id="male" />
+            <label for="male">male</label>
+            <input type="checkbox" id="female" />
+            <label for="female">female</label>
+        </div>
+        <div class="col-md-4" style="text-align:center">
+            @Html.ActionLink("Advanced Search", "Advanced")
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <label>Results</label>
+            <table style="width: 100%">
+                <tr style="background: lawngreen">
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Birth Place</th>
+                </tr>
+                <tr>
+                    <td>250</td>
+                    <td>Henka Almeda</td>
+                    <td>Female</td>
+                    <td>City of Melbourne</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
