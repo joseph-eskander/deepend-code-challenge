@@ -70,6 +70,5 @@ C:\Users\Onset\Documents\Visual Studio 2015\Projects\deepend-code-challenge\Deep
 C:\Users\Onset\Documents\Visual Studio 2015\Projects\deepend-code-challenge\DeependAncestry\DeependAncestry\bin\Microsoft.Owin.Security.Google.xml
 C:\Users\Onset\Documents\Visual Studio 2015\Projects\deepend-code-challenge\DeependAncestry\DeependAncestry\bin\Microsoft.Owin.Security.Twitter.xml
 C:\Users\Onset\Documents\Visual Studio 2015\Projects\deepend-code-challenge\DeependAncestry\DeependAncestry\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
-C:\Users\Onset\Documents\Visual Studio 2015\Projects\deepend-code-challenge\DeependAncestry\DeependAncestry\obj\Debug\DeependAncestry.csprojResolveAssemblyReference.cache
 C:\Users\Onset\Documents\Visual Studio 2015\Projects\deepend-code-challenge\DeependAncestry\DeependAncestry\obj\Debug\DeependAncestry.dll
 C:\Users\Onset\Documents\Visual Studio 2015\Projects\deepend-code-challenge\DeependAncestry\DeependAncestry\obj\Debug\DeependAncestry.pdb
