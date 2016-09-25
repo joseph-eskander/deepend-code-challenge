@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Data;
@@ -10,8 +11,6 @@ namespace DeependAncestry.Controllers
 {
     public class SearchController : Controller
     {
-        private const string _jsonFile = @"data_small.json";
-
         // GET: Search
         public ActionResult Index()
         {
@@ -23,25 +22,24 @@ namespace DeependAncestry.Controllers
         {
             if (ModelState.IsValid)
             {
-                var data = new DataRepository(Server.MapPath($@"~\app_data\{_jsonFile}"));
+                var data = new DataRepository(Server.MapPath($@"~\app_data\{ConfigurationManager.AppSettings["dataFilename"]}"));
 
-                var result =
-                    data.People.Values.Where(p => p.Name.ToLower().Contains(searchViewModel.Name.ToLower()))
-                        .Select(p => new PersonSearchResult()
-                        {
-                            Id = p.Id,
-                            Name = p.Name,
-                            Gender = p.Gender == "M" ? "Male" : "Female",
-                            BirthPlace = data.Places[p.PlaceId].Name
-                        });
+                string genderSearch = null;
+                if (searchViewModel.Male != searchViewModel.Female)
+                {
+                    genderSearch = searchViewModel.Male ? "M" : "F";
+                }
 
-                    if (searchViewModel.Male != searchViewModel.Female)
+                searchViewModel.Result = data.FindPerson(searchViewModel.Name, genderSearch)
+                    .Select(p => new PersonSearchResult()
                     {
-                        result = searchViewModel.Male ? result.Where(p => p.Gender == "Male") : result.Where(p => p.Gender == "Female");
-                    }
+                        Id = p.Id,
+                        Name = p.Name,
+                        Gender = p.Gender == "M" ? "Male" : "Female",
+                        BirthPlace = data.Places[p.PlaceId].Name
+                    }).ToList();
 
-                    searchViewModel.Result = result.Take(10).ToList();
-                    return View(searchViewModel);
+                return View(searchViewModel);
             }
 
             return View(searchViewModel);
@@ -49,7 +47,37 @@ namespace DeependAncestry.Controllers
 
         public ActionResult Advanced()
         {
-            throw new System.NotImplementedException();
+            return View(new SearchViewModel());
+        }
+
+        [HttpPost]
+        public ActionResult Advanced(SearchViewModel searchViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var data = new DataRepository(Server.MapPath($@"~\app_data\{ConfigurationManager.AppSettings["dataFilename"]}"));
+
+                string genderSearch = null;
+                if (searchViewModel.Male != searchViewModel.Female)
+                {
+                    genderSearch = searchViewModel.Male ? "M" : "F";
+                }
+
+                bool ancestorSearch = searchViewModel.Direction == SearchDirection.Ancestors;
+
+                searchViewModel.Result = data.FindPersonHierarchy(searchViewModel.Name, genderSearch, ancestorSearch)
+                    .Select(p => new PersonSearchResult()
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Gender = p.Gender == "M" ? "Male" : "Female",
+                        BirthPlace = data.Places[p.PlaceId].Name
+                    }).ToList();
+
+                return View(searchViewModel);
+            }
+
+            return View(new SearchViewModel());
         }
     }
 }
