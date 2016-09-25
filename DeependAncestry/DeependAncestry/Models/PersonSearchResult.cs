@@ -1,6 +1,6 @@
 ﻿namespace DeependAncestry.Models
 {
-    public class Person
+    public class PersonSearchResult
     {
         public int Id { get; set; }
         public string Name { get; set; }

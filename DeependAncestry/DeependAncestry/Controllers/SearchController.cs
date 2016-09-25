@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Data;
 using DeependAncestry.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -9,7 +10,7 @@ namespace DeependAncestry.Controllers
 {
     public class SearchController : Controller
     {
-        private const string _jsonFile = @"data_large.json";
+        private const string _jsonFile = @"data_small.json";
 
         // GET: Search
         public ActionResult Index()
@@ -22,24 +23,17 @@ namespace DeependAncestry.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (StreamReader reader = System.IO.File.OpenText(Server.MapPath($@"~\app_data\{_jsonFile}")))
-                {
-                    JObject data = (JObject) JToken.ReadFrom(new JsonTextReader(reader));
+                var data = new DataRepository(Server.MapPath($@"~\app_data\{_jsonFile}"));
 
-                    var allPlaces = data["places"].Select(p => new
-                    {
-                        Id = (int) p["id"],
-                        Name = (string) p["name"]
-                    }).ToDictionary(p => p.Id);
-
-                    var result = data["people"].Select(p => new Person()
+                var result =
+                    data.People.Values.Where(p => p.Name.ToLower().Contains(searchViewModel.Name.ToLower()))
+                        .Select(p => new PersonSearchResult()
                         {
-                            Id = (int) p["id"],
-                            Name = (string) p["name"],
-                            Gender = (string) p["gender"] == "M" ? "Male" : "Female",
-                            BirthPlace = allPlaces[(int) p["place_id"]].Name
-                        })
-                        .Where(p => p.Name.ToLower().Contains(searchViewModel.Name.ToLower()));
+                            Id = p.Id,
+                            Name = p.Name,
+                            Gender = p.Gender == "M" ? "Male" : "Female",
+                            BirthPlace = data.Places[p.PlaceId].Name
+                        });
 
                     if (searchViewModel.Male != searchViewModel.Female)
                     {
@@ -48,7 +42,6 @@ namespace DeependAncestry.Controllers
 
                     searchViewModel.Result = result.Take(10).ToList();
                     return View(searchViewModel);
-                }
             }
 
             return View(searchViewModel);

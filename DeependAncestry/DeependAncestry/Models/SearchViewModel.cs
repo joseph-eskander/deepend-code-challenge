@@ -10,6 +10,6 @@ namespace DeependAncestry.Models
         public bool Male { get; set; }
         public bool Female { get; set; }
 
-        public IList<Person> Result { get; set; }
+        public IList<PersonSearchResult> Result { get; set; }
     }
 }
